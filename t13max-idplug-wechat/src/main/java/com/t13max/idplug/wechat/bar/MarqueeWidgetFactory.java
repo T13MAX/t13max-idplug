@@ -17,7 +17,7 @@ public class MarqueeWidgetFactory implements StatusBarWidgetFactory {
     }
 
     @Override
-    public  String getDisplayName() {
+    public String getDisplayName() {
         return "跑马灯状态栏控件";
     }
 
@@ -27,17 +27,17 @@ public class MarqueeWidgetFactory implements StatusBarWidgetFactory {
     }
 
     @Override
-    public StatusBarWidget createWidget( Project project) {
+    public StatusBarWidget createWidget(Project project) {
         return new WechatStatusBarWidget();
     }
 
     @Override
-    public void disposeWidget( StatusBarWidget widget) {
+    public void disposeWidget(StatusBarWidget widget) {
         widget.dispose();
     }
 
     @Override
-    public boolean canBeEnabledOn( StatusBar statusBar) {
+    public boolean canBeEnabledOn(StatusBar statusBar) {
         return true;
     }
 }

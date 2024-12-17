@@ -14,7 +14,7 @@ repositories {
 
 dependencies {
 
-    implementation("com.t13max.wxbot:t13max-wxbot-api:1.0.0")
+    implementation("com.t13max.wxbot:t13max-wxbot-core:1.0.0")
 }
 
 // Configure Gradle IntelliJ Plugin

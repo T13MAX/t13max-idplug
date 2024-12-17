@@ -1,8 +1,6 @@
 package com.t13max.idplug.wechat.bar;
 
-import com.intellij.openapi.wm.StatusBar;
 import com.intellij.openapi.wm.StatusBarWidget;
-import com.intellij.openapi.wm.impl.status.TextPanel;
 import com.intellij.util.Consumer;
 
 import javax.swing.*;
@@ -16,6 +14,8 @@ import java.awt.event.MouseEvent;
  * @since 17:00 2024/12/16
  */
 public class WechatStatusBarWidget implements StatusBarWidget {
+
+    public final static String ID = "WechatStatusBarWidget";
 
     private String text = "跑马灯效果的状态栏文字 ";
     private int position = 0;
@@ -45,7 +45,7 @@ public class WechatStatusBarWidget implements StatusBarWidget {
 
     @Override
     public String ID() {
-        return "MarqueeStatusBarWidget";
+        return ID;
     }
 
     @Override
