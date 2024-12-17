@@ -8,14 +8,13 @@
     <name>T13max-idplug-wechat</name>
 
     <!-- A displayed Vendor name or Organization ID displayed on the Plugins Page. -->
-    <vendor email="support@yourcompany.com" url="https://www.yourcompany.com">YourCompany</vendor>
+    <vendor email="t13max@163.com" url="https://www.yourcompany.com">YourCompany</vendor>
 
     <!-- Description of the plugin displayed on the Plugin Page and IDE Plugin Manager.
          Simple HTML elements (text formatting, paragraphs, and lists) can be added inside of <![CDATA[ ]]> tag.
          Guidelines: https://plugins.jetbrains.com/docs/marketplace/plugin-overview-page.html#plugin-description -->
     <description><![CDATA[
-    Enter short description for your plugin here.<br>
-    <em>most HTML tags may be used</em>
+    个人微信, idea插件版
   ]]></description>
 
     <!-- Product and plugin compatibility requirements.
@@ -25,11 +24,12 @@
     <!-- Extension points defined by the plugin.
          Read more: https://plugins.jetbrains.com/docs/intellij/plugin-extension-points.html -->
     <extensions defaultExtensionNs="com.intellij">
-
+        <toolWindow id="WechatToolWindowFactory" anchor="right"
+                    factoryClass="com.t13max.idplug.wechat.windows.WechatToolWindowFactory"/>
+        <statusBarWidgetFactory id="WechatStatusBarFactory"
+                                implementation="com.t13max.idplug.wechat.bar.MarqueeWidgetFactory"/>
     </extensions>
     <actions>
-        <action id="Test" class="com.t13max.idplug.wechat.Test" text="Test" description="Test">
-            <add-to-group group-id="FileMenu" anchor="first"/>
-        </action>
+
     </actions>
 </idea-plugin>

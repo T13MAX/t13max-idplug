@@ -13,11 +13,8 @@ repositories {
 }
 
 dependencies {
-    implementation("org.apache.httpcomponents:httpmime:4.5.14")
-    implementation("com.alibaba:fastjson:2.0.9")
-    implementation("org.dom4j:dom4j:2.1.1")
 
-    implementation("com.t13max.common:t13max-core:1.0.1")
+    implementation("com.t13max.wxbot:t13max-wxbot-api:1.0.0")
 }
 
 // Configure Gradle IntelliJ Plugin
