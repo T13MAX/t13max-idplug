@@ -115,7 +115,6 @@ public class WechatToolWindowFactory implements ToolWindowFactory, DumbAware {
         comboBox.addPopupMenuListener(new PopupMenuListenerAdapter() {
             @Override
             public void popupMenuWillBecomeVisible(PopupMenuEvent e) {
-
                 updateComboBox(comboBox.getSelectedIndex());
             }
         });
@@ -147,7 +146,7 @@ public class WechatToolWindowFactory implements ToolWindowFactory, DumbAware {
                         .isNeedToResend(false)
                         .build();
                 MessageTools.sendMsgByUserId(robot, message);
-                newMessage(message);
+                newMessage(message, true);
             });
         });
         loginButton.addActionListener(e -> {
@@ -155,7 +154,11 @@ public class WechatToolWindowFactory implements ToolWindowFactory, DumbAware {
                 robot = RobotManager.inst().createRobot();
             }
             if (robot.getStatusEnum() != RobotStatusEnum.IDLE) {
+                //离线
+                loginButton.setText("Login");
                 return;
+            } else {
+                loginButton.setText("Logout");
             }
             try {
                 BufferedImage bufferedImage = robot.getQR();
@@ -211,11 +214,7 @@ public class WechatToolWindowFactory implements ToolWindowFactory, DumbAware {
                     // 通过 StatusBar 获取 StatusBarWidgetFactory 实例
                     StatusBarWidget statusBarWidget = statusBar.getWidget(WechatStatusBarWidget.ID);
                     if (statusBarWidget instanceof WechatStatusBarWidget wechatStatusBarWidget) {
-                        String fromNickName = message.getFromNickname();
-                        if (fromNickName.length() > 3) {
-                            fromNickName = fromNickName.substring(0, 3);
-                        }
-                        wechatStatusBarWidget.setText(fromNickName + ":" + message.getFromMemberOfGroupNickname() + ":" + message.getContent());
+                        wechatStatusBarWidget.setText(getMessageLine(message));
                     }
                 }
             });
@@ -223,6 +222,7 @@ public class WechatToolWindowFactory implements ToolWindowFactory, DumbAware {
 
         // 将面板添加到ToolWindow
         toolWindow.getComponent().add(panel);
+        toolWindow.setTitle("WeChat");
     }
 
     private void runApplication() {
@@ -246,16 +246,33 @@ public class WechatToolWindowFactory implements ToolWindowFactory, DumbAware {
         List<Message> messageList = contentMap.getOrDefault(selected, Collections.emptyList());
         StringBuilder sb = new StringBuilder();
         for (Message message : messageList) {
-            String fromNickName = message.getFromNickname();
-            if (fromNickName.length() > 3) {
-                fromNickName = fromNickName.substring(0, 3);
-            }
-            sb.append(fromNickName).append(":").append(message.getFromMemberOfGroupNickname()).append(":").append(message.getContent()).append("\n");
+            sb.append(getMessageLine(message));
         }
-        textArea.setText(sb.toString());
+        SwingUtilities.invokeLater(() -> {
+            textArea.setText(sb.toString());
+        });
+    }
+
+    private String getMessageLine(Message message) {
+        StringBuilder sb = new StringBuilder();
+        String fromNickName = message.getFromNickname();
+        /*if (fromNickName.length() > 3) {
+            fromNickName = fromNickName.substring(0, 3);
+        }
+        sb.append(fromNickName).append(":");*/
+        if (message.isGroup()) {
+            sb.append(message.getFromMemberOfGroupNickname()).append(":");
+        }else{
+            sb.append(fromNickName).append(":");
+        }
+        sb.append(message.getContent()).append("\n");
+        return sb.toString();
     }
 
     private void updateComboBox(int index) {
+        if (robot == null) {
+            return;
+        }
         Set<String> recentContacts = robot.getRecentContacts();
         DefaultComboBoxModel<ContactsElement> model = (DefaultComboBoxModel<ContactsElement>) comboBox.getModel();
         ContactsElement selectElement = null;
@@ -293,25 +310,33 @@ public class WechatToolWindowFactory implements ToolWindowFactory, DumbAware {
     }
 
     private void newMessage(Message message) {
-        List<Message> messageList = this.contentMap.computeIfAbsent(message.getFromUsername(), k -> new LinkedList<>());
+        newMessage(message, false);
+    }
+
+    private void newMessage(Message message, boolean self) {
+        String toUserName = self ? message.getToUsername() : message.getFromUsername();
+        List<Message> messageList = this.contentMap.computeIfAbsent(toUserName, k -> new LinkedList<>());
         messageList.add(message);
         if (messageList.size() > 100) {
             messageList = messageList.subList(50, messageList.size());
-            this.contentMap.put(message.getToUsername(), messageList);
+            this.contentMap.put(toUserName, messageList);
         }
         ContactsElement selected = (ContactsElement) comboBox.getSelectedItem();
         if (selected == null) {
             return;
         }
         String username = selected.getContacts().getUsername();
-        if (username.equals(message.getFromUsername()) || username.equals(message.getToUsername())) {
+        if (username.equals(toUserName)) {
             updateTextArea(username);
-        } else if (!username.equals(message.getToUsername())) {
+        } else {
+            selected.setNewMsg(true);
             // 遍历 JComboBox 中的元素
             for (int i = 0; i < comboBox.getModel().getSize(); i++) {
                 ContactsElement element = comboBox.getModel().getElementAt(i);
-                element.setNewMsg(true);
-            }
+                if (element.getContacts().getUsername().equals(toUserName)) {
+                    element.setNewMsg(true);
+                }
+             }
         }
     }
 

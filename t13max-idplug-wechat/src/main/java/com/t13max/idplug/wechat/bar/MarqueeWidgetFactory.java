@@ -28,7 +28,7 @@ public class MarqueeWidgetFactory implements StatusBarWidgetFactory {
 
     @Override
     public StatusBarWidget createWidget(Project project) {
-        return new WechatStatusBarWidget();
+        return new WechatStatusBarWidget(project);
     }
 
     @Override
