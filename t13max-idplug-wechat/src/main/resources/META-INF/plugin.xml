@@ -26,8 +26,8 @@
     <extensions defaultExtensionNs="com.intellij">
         <toolWindow id="WechatToolWindowFactory" anchor="right"
                     factoryClass="com.t13max.idplug.wechat.windows.WechatToolWindowFactory"/>
-        <statusBarWidgetFactory id="WechatStatusBarFactory"
-                                implementation="com.t13max.idplug.wechat.bar.MarqueeWidgetFactory"/>
+        <!--<statusBarWidgetFactory id="WechatStatusBarFactory"
+                                implementation="com.t13max.idplug.wechat.bar.MarqueeWidgetFactory"/>-->
     </extensions>
     <actions>
 

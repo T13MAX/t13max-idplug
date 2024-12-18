@@ -210,12 +210,12 @@ public class WechatToolWindowFactory implements ToolWindowFactory, DumbAware {
             robot.register(new MessageHandler() {
                 @Override
                 public void handle(Message message) {
-                    StatusBar statusBar = WindowManager.getInstance().getStatusBar(project);
+                    /*StatusBar statusBar = WindowManager.getInstance().getStatusBar(project);
                     // 通过 StatusBar 获取 StatusBarWidgetFactory 实例
                     StatusBarWidget statusBarWidget = statusBar.getWidget(WechatStatusBarWidget.ID);
                     if (statusBarWidget instanceof WechatStatusBarWidget wechatStatusBarWidget) {
                         wechatStatusBarWidget.setText(getMessageLine(message));
-                    }
+                    }*/
                 }
             });
         });
